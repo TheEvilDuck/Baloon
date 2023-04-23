@@ -1,14 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Baloon : MonoBehaviour
 {
     private bool _grow = false;
     private Transform _transform;
     private float _step = 0.01f;
-    private float _maxSizeInStartSizePercent = 1.5f;
+    private float _currentGrow = 1f;
+    private float _maxSizeInStartSizePercent = 10f;
     private Vector3 _startSize;
+
+    public event Action<float> grown;
+    public event Action exploded;
     private void OnEnable() 
     {
         PlayerInput.instance.tapStarted+=OnTapStarted;
@@ -40,10 +45,17 @@ public class Baloon : MonoBehaviour
 
     private void Grow()
     {
-        if ((_transform.localScale+Vector3.one*_step).x<(_startSize+Vector3.one*_maxSizeInStartSizePercent).x)
-            _transform.localScale+=Vector3.one*_step;
-        else
+        _currentGrow+=_step;
+        if (_currentGrow>=_maxSizeInStartSizePercent)
+        {
             Debug.Log("BOOM");
+            exploded?.Invoke();
+        }
+        else
+        {
+            _transform.localScale = _startSize*_currentGrow;
+            grown?.Invoke(_currentGrow);
+        }
     }
     // Update is called once per frame
     void Update()
