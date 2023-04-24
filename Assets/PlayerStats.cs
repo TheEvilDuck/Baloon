@@ -1,18 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-public class PlayerStats : MonoBehaviour
+
+public class PlayerStats
 {
-    // Start is called before the first frame update
-    void Start()
+    public void OnBaloonGrow(float currentSize)
     {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    }
+    public void OnBaloonExploded()
     {
-        
+
     }
 }

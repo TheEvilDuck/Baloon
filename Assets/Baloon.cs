@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System;
 
@@ -62,5 +60,11 @@ public class Baloon : MonoBehaviour
     {
         if (_grow)
             Grow();
+    }
+
+    public void SetValues(float growStep,float maxSize)
+    {
+        _step = growStep;
+        _maxSizeInStartSizePercent = maxSize;
     }
 }
