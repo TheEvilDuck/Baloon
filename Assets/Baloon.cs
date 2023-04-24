@@ -10,7 +10,7 @@ public class Baloon : MonoBehaviour
     private float _maxSizeInStartSizePercent = 10f;
     private Vector3 _startSize;
 
-    public event Action<float> grown;
+    public event Action grown;
     public event Action exploded;
     private void OnEnable() 
     {
@@ -52,7 +52,7 @@ public class Baloon : MonoBehaviour
         else
         {
             _transform.localScale = _startSize*_currentGrow;
-            grown?.Invoke(_currentGrow);
+            grown?.Invoke();
         }
     }
     // Update is called once per frame
