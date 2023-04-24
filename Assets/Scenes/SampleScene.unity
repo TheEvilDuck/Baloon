@@ -442,6 +442,7 @@ MonoBehaviour:
   _growStep: 0.01
   _pointsPerStep: 1
   _holdMultiplier: 0.1
+  _holdTimeToStartBreath: 1
   _baloonPrefab: {fileID: 2769712194170344485, guid: b76dca2fb923062469c8d365a035a3ec, type: 3}
 --- !u!4 &1513403652
 Transform:

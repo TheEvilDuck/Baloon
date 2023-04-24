@@ -12,25 +12,22 @@ public class Baloon : MonoBehaviour
 
     public event Action grown;
     public event Action exploded;
-    private void OnEnable() 
-    {
-        PlayerInput.instance.tapStarted+=OnTapStarted;
-        PlayerInput.instance.tapEnded+=OnTapEnded;
-    }
+
+    private Game _game;
     private void OnDisable() 
     {
-        if (PlayerInput.instance!=null)
+       if (_game!=null)
         {
-            PlayerInput.instance.tapStarted-=OnTapStarted;
-            PlayerInput.instance.tapEnded-=OnTapEnded;
+            _game.playerBreathStarted-=OnBreathStarted;
+            _game.playerBreathEnded-=OnBreathEnded;
         }
     }
 
-    private void OnTapStarted()
+    private void OnBreathStarted()
     {
         _grow = true;
     }
-    private void OnTapEnded()
+    private void OnBreathEnded()
     {
         _grow = false;
     }
@@ -60,9 +57,13 @@ public class Baloon : MonoBehaviour
             Grow();
     }
 
-    public void SetValues(float growStep,float maxSize)
+    public void SetValues(float growStep,float maxSize, Game game)
     {
         _step = growStep;
         _maxSizeInStartSizePercent = maxSize;
+        _game = game;
+        _game.playerBreathStarted+=OnBreathStarted;
+        _game.playerBreathEnded+=OnBreathEnded;
+
     }
 }
