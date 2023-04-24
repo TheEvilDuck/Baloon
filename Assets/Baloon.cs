@@ -46,7 +46,6 @@ public class Baloon : MonoBehaviour
         _currentGrow+=_step;
         if (_currentGrow>=_maxSizeInStartSizePercent)
         {
-            Debug.Log("BOOM");
             exploded?.Invoke();
         }
         else
@@ -55,7 +54,6 @@ public class Baloon : MonoBehaviour
             grown?.Invoke();
         }
     }
-    // Update is called once per frame
     void Update()
     {
         if (_grow)

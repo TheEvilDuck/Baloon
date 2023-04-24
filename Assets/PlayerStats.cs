@@ -3,7 +3,7 @@ using System;
 public class PlayerStats
 {
     private float _points;
-    public Action<float>pointsChanged;
+    public event Action<float>pointsChanged;
     private float _pointsPerStep;
     private float _holdMultiplier;
     private float _currentMultiplier = 1f;

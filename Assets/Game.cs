@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 public class Game : MonoBehaviour
 {
@@ -6,17 +7,19 @@ public class Game : MonoBehaviour
     [SerializeField]float _growStep;
     [SerializeField]float _pointsPerStep;
     [SerializeField]float _holdMultiplier;
+    public event Action playerStatsCreated;
 
-    private PlayerStats _playerStats;
+    public PlayerStats playerStats
+    {
+        get;
+        private set;
+    }
 
     [SerializeField]Baloon _baloonPrefab;
     void Start()
     {
         Baloon baloon = InitBaloon();
         InitPlayerStats(baloon);
-        _playerStats.pointsChanged+=((float points)=>{
-            Debug.Log(points);
-        });
     }
 
     public Baloon InitBaloon()
@@ -27,9 +30,10 @@ public class Game : MonoBehaviour
     }
     public void InitPlayerStats(Baloon baloon)
     {
-        _playerStats = new PlayerStats(_pointsPerStep,_holdMultiplier);
-        baloon.grown+=_playerStats.OnBaloonGrow;
-        baloon.exploded+=_playerStats.OnBaloonExploded;
-        PlayerInput.instance.tapEnded+=_playerStats.OnGrowStop;
+        playerStats = new PlayerStats(_pointsPerStep,_holdMultiplier);
+        baloon.grown+=playerStats.OnBaloonGrow;
+        baloon.exploded+=playerStats.OnBaloonExploded;
+        PlayerInput.instance.tapEnded+=playerStats.OnGrowStop;
+        playerStatsCreated?.Invoke();
     }
 }
