@@ -438,8 +438,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37d6a450dac21a94a83520b65444b4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxBaloonSize: 10
-  _growStep: 0.01
+  _maxBaloonSize: 15
+  _minSizePercent: 0.3
+  _maxSizePercent: 2
+  _growStep: 0.0005
   _pointsPerStep: 1
   _holdMultiplier: 0.1
   _holdTimeToStartBreath: 1

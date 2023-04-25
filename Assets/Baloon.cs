@@ -59,7 +59,7 @@ public class Baloon : MonoBehaviour
 
     public void SetValues(float growStep,float maxSize, Game game)
     {
-        _step = growStep;
+        _step = maxSize*growStep;
         _maxSizeInStartSizePercent = maxSize;
         _game = game;
         _game.playerBreathStarted+=OnBreathStarted;

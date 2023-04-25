@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 public class PlayerStats
 {
@@ -20,6 +21,7 @@ public class PlayerStats
     }
     public void OnBaloonExploded()
     {
+        Debug.Log(_points);
         _points = 0;
         pointsChanged?.Invoke(_points);
     }

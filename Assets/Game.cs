@@ -4,6 +4,8 @@ using System;
 public class Game : MonoBehaviour
 {
     [SerializeField]float _maxBaloonSize;
+    [SerializeField]float _minSizePercent;
+    [SerializeField]float _maxSizePercent;
     [SerializeField]float _growStep;
     [SerializeField]float _pointsPerStep;
     [SerializeField]float _holdMultiplier;
@@ -43,14 +45,15 @@ public class Game : MonoBehaviour
     }
     void Start()
     {
-        Baloon baloon = InitBaloon();
+        float sizePercent = UnityEngine.Random.Range(_minSizePercent,_maxSizePercent);
+        Baloon baloon = InitBaloon(sizePercent);
         InitPlayerStats(baloon);
     }
 
-    public Baloon InitBaloon()
+    public Baloon InitBaloon(float sizePercent)
     {
         Baloon baloon = Instantiate(_baloonPrefab);
-        baloon.SetValues(_growStep,_maxBaloonSize, this);
+        baloon.SetValues(_growStep,_maxBaloonSize*sizePercent, this);
         return baloon;
     }
     public void InitPlayerStats(Baloon baloon)
