@@ -21,6 +21,7 @@ public class Game : MonoBehaviour
     public event Action baloonCreated;
     public event Action playerBreathStarted;
     public event Action playerBreathEnded;
+    public event Action<float> inhale;
 
     public PlayerStats playerStats
     {
@@ -81,6 +82,7 @@ public class Game : MonoBehaviour
     {
         if (_breath)
         {
+            inhale?.Invoke(_currentHoldTime/_holdTimeToStartBreath);
             if (_currentHoldTime>=_holdTimeToStartBreath)
                 playerBreathStarted?.Invoke();
             else
