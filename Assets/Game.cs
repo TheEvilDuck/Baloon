@@ -12,7 +12,13 @@ public class Game : MonoBehaviour
     [SerializeField]float _holdTimeToStartBreath;
     private float _currentHoldTime = 0;
     private bool _breath = false;
+    public Baloon baloon 
+    {
+        get;
+        private set;
+    }
     public event Action playerStatsCreated;
+    public event Action baloonCreated;
     public event Action playerBreathStarted;
     public event Action playerBreathEnded;
 
@@ -46,17 +52,24 @@ public class Game : MonoBehaviour
     void Start()
     {
         float sizePercent = UnityEngine.Random.Range(_minSizePercent,_maxSizePercent);
-        Baloon baloon = InitBaloon(sizePercent);
-        InitPlayerStats(baloon);
+        baloon = InitBaloon(sizePercent);
+        InitPlayerStats();
     }
 
     public Baloon InitBaloon(float sizePercent)
     {
-        Baloon baloon = Instantiate(_baloonPrefab);
+        baloon = Instantiate(_baloonPrefab);
         baloon.SetValues(_growStep,_maxBaloonSize*sizePercent, this);
+        Color randomColor = new Color(
+            UnityEngine.Random.Range(0,1f),
+            UnityEngine.Random.Range(0,1f),
+            UnityEngine.Random.Range(0,1f)
+        );
+        baloon.UpdateBaloonColor(randomColor);
+        baloonCreated?.Invoke();
         return baloon;
     }
-    public void InitPlayerStats(Baloon baloon)
+    public void InitPlayerStats()
     {
         playerStats = new PlayerStats(_pointsPerStep,_holdMultiplier);
         baloon.grown+=playerStats.OnBaloonGrow;
