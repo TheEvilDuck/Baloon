@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class UI : MonoBehaviour
@@ -6,7 +7,7 @@ public class UI : MonoBehaviour
     [SerializeField]Game _game;
     [SerializeField]TextMeshProUGUI _pointsText;
     [SerializeField]GameObject _breathUI;
-    [SerializeField]RectTransform _breathBar; 
+    [SerializeField]Slider _breathBarSlider;
     private bool _inhale = false;
     private void Awake() {
         _game.playerStatsCreated+=OnPlayerStatsCreated;
@@ -35,7 +36,7 @@ public class UI : MonoBehaviour
     private void OnPlayerInhale(float holdTimePercent)
     {
         _breathUI.SetActive(true);
-        _breathBar.localPosition = new Vector3(0,(holdTimePercent-1f)*100f,0);
+        _breathBarSlider.value = holdTimePercent;
     }
 
 }
