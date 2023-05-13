@@ -8,11 +8,19 @@ public class UI : MonoBehaviour
     [SerializeField]TextMeshProUGUI _pointsText;
     [SerializeField]GameObject _breathUI;
     [SerializeField]Slider _breathBarSlider;
-    private bool _inhale = false;
-    private void Awake() {
+    [SerializeField]GameObject _resultMenu;
+    public Button reloadScene;
+    [SerializeField] Button doneButton;
+    [SerializeField]TextMeshProUGUI _pointsInResultMenu;
+
+    private void OnEnable() {
         _game.playerStatsCreated+=OnPlayerStatsCreated;
         _game.playerBreathEnded+=OnPlayerEndBreath;
         _game.inhale+=OnPlayerInhale;
+        _game.acceptedCurrentBaloonState+=ShowResultMenu;
+        _resultMenu.SetActive(false);
+        _breathUI.SetActive(false);
+        doneButton.onClick.AddListener(_game.AcceptCurrentBaloonState);
     }
     private void OnPlayerStatsCreated()
     {
@@ -23,6 +31,8 @@ public class UI : MonoBehaviour
         _game.playerStatsCreated-=OnPlayerStatsCreated;
         _game.playerBreathEnded-=OnPlayerEndBreath;
         _game.inhale-=OnPlayerInhale;
+        _game.acceptedCurrentBaloonState-=ShowResultMenu;
+        doneButton.onClick.RemoveListener(_game.AcceptCurrentBaloonState);
     }
     private void OnPointsChanged(float points)
     {
@@ -31,12 +41,18 @@ public class UI : MonoBehaviour
     private void OnPlayerEndBreath()
     {
         _breathUI.SetActive(false);
-        _inhale = false;
     }
     private void OnPlayerInhale(float holdTimePercent)
     {
         _breathUI.SetActive(true);
         _breathBarSlider.value = holdTimePercent;
+    }
+    private void ShowResultMenu()
+    {
+        _resultMenu.SetActive(true);
+        _breathUI.SetActive(false);
+        _pointsText.gameObject.SetActive(false);
+        _pointsInResultMenu.text = $"Your score: {_game.playerStats.points}";
     }
 
 }

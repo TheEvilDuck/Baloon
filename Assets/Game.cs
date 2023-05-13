@@ -11,6 +11,7 @@ public class Game : MonoBehaviour
     [SerializeField]float _holdMultiplier;
     [SerializeField]float _holdTimeToStartBreath;
     private float _currentHoldTime = 0;
+    private bool _inhale = false;
     private bool _breath = false;
     public Baloon baloon 
     {
@@ -22,6 +23,8 @@ public class Game : MonoBehaviour
     public event Action playerBreathStarted;
     public event Action playerBreathEnded;
     public event Action<float> inhale;
+    public event Action inhaleStarted;
+    public event Action acceptedCurrentBaloonState;
 
     public PlayerStats playerStats
     {
@@ -43,10 +46,12 @@ public class Game : MonoBehaviour
     }
     private void OnTapStarted()
     {
-        _breath = true;
+        _inhale = true;
+        inhaleStarted?.Invoke();
     }
     private void OnTapEnded()
     {
+        _inhale = false;
         _breath = false;
         playerBreathEnded?.Invoke();
     }
@@ -68,7 +73,20 @@ public class Game : MonoBehaviour
         );
         baloon.UpdateBaloonColor(randomColor);
         baloonCreated?.Invoke();
+        baloon.exploded+=(()=>{
+            playerStats.OnBaloonExploded();
+            AcceptCurrentBaloonState();
+        });
         return baloon;
+    }
+    public void AcceptCurrentBaloonState()
+    {
+        PlayerInput.instance.tapStarted-=OnTapStarted;
+        PlayerInput.instance.tapEnded-=OnTapEnded;
+        _inhale = false;
+        _breath = false;
+        playerBreathEnded?.Invoke();
+        acceptedCurrentBaloonState?.Invoke();
     }
     public void InitPlayerStats()
     {
@@ -80,11 +98,17 @@ public class Game : MonoBehaviour
     }
     private void Update() 
     {
-        if (_breath)
+        if (_inhale)
         {
             inhale?.Invoke(_currentHoldTime/_holdTimeToStartBreath);
             if (_currentHoldTime>=_holdTimeToStartBreath)
-                playerBreathStarted?.Invoke();
+            {
+                if (!_breath)
+                {
+                    _breath = true;
+                    playerBreathStarted?.Invoke();
+                }
+            }
             else
                 _currentHoldTime+=Time.deltaTime;
         }else if (_currentHoldTime!=0)

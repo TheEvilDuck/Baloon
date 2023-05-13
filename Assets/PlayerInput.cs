@@ -21,9 +21,6 @@ public class PlayerInput : MonoBehaviour
         }
         private set{}
     }
-    private void Awake() {
-        DontDestroyOnLoad(this.gameObject);
-    }
 
     // Update is called once per frame
     void Update()

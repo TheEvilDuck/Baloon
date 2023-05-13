@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PlayerStats
 {
-    private float _points;
+    public float points {get;private set;}
     public event Action<float>pointsChanged;
     private float _pointsPerStep;
     private float _holdMultiplier;
@@ -15,15 +15,14 @@ public class PlayerStats
     }
     public void OnBaloonGrow()
     {
-        _points+=_pointsPerStep*_currentMultiplier;
+        points+=_pointsPerStep*_currentMultiplier;
         _currentMultiplier+=_holdMultiplier;
-        pointsChanged?.Invoke(_points);
+        pointsChanged?.Invoke(points);
     }
     public void OnBaloonExploded()
     {
-        Debug.Log(_points);
-        _points = 0;
-        pointsChanged?.Invoke(_points);
+        points = 0;
+        pointsChanged?.Invoke(points);
     }
     public void OnGrowStop()
     {
