@@ -7,18 +7,21 @@ public class MainMenuUI : MonoBehaviour
 {
     [SerializeField]Button _startGameButton;
     [SerializeField]Button _exitGameButton;
-    [SerializeField]Button _leaderBoardButton;
-    [SerializeField]Button _backToMainMenuButton;
-
     private void OnEnable() {
         _startGameButton.onClick.AddListener(StartGame);
+        _exitGameButton.onClick.AddListener(ExitGame);
     }
     private void OnDisable() {
         _startGameButton.onClick.RemoveListener(StartGame);
+        _exitGameButton.onClick.RemoveListener(ExitGame);
     }
 
     private void StartGame()
     {
         SceneLoader.instance.LoadScene(0);
+    }
+    private void ExitGame()
+    {
+        Application.Quit();
     }
 }

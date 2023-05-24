@@ -32,6 +32,7 @@ public class UI : MonoBehaviour
         _reloadScene.onClick.AddListener(SceneLoader.instance.ReloadScene);
         _sumbitButton.onClick.AddListener(OnSubmitButtonPressed);
         _exitButton.onClick.AddListener(OnExitButtonPressed);
+
     }
     private void OnPlayerStatsCreated()
     {
@@ -47,6 +48,10 @@ public class UI : MonoBehaviour
         _reloadScene.onClick.RemoveListener(SceneLoader.instance.ReloadScene);
         _sumbitButton.onClick.RemoveListener(OnSubmitButtonPressed);
         _exitButton.onClick.RemoveListener(OnExitButtonPressed);
+    }
+    public void OnInpitFieldFocusEnd()
+    {
+        
     }
     private void OnExitButtonPressed()
     {
