@@ -3,16 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SceneLoader : MonoBehaviour
+public class SceneLoader : SingleTone<SceneLoader>
 {
-    [SerializeField]UI _ui;
-    private void OnEnable() {
-        _ui.reloadScene.onClick.AddListener(ReloadScene);
+    public void LoadScene(int id)
+    {
+        SceneManager.LoadScene(id);
     }
-    private void OnDisable() {
-        _ui.reloadScene.onClick.RemoveListener(ReloadScene);
-    }
-    private void ReloadScene()
+    public void ReloadScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }

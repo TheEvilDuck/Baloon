@@ -25,6 +25,9 @@ public class SoundManager : MonoBehaviour
         _game.playerBreathStarted-=OnBreathStarted;
         _game.playerBreathEnded-=OnBreathEnded;
     }
+    private void Awake() {
+        DontDestroyOnLoad(this);
+    }
     private void OnInhaleStarted()
     {
         _audioSource.clip = _inhaleSound;

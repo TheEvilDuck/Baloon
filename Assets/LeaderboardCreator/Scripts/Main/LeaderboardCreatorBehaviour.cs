@@ -32,7 +32,7 @@ namespace Dan.Main
                 }
 
                 var guid = request.downloadHandler.text;
-                PlayerPrefs.SetString(PlayerPrefsGuidKey, guid);
+                //PlayerPrefs.SetString(PlayerPrefsGuidKey, guid);
                 callback?.Invoke(guid);
             }));
         }
