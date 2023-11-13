@@ -18,7 +18,7 @@ public class LeaderBoard : MonoBehaviour
         for (int i = 0;i<Mathf.Min(_entriesNumberToShow,entries.Length);i++)
         {
             TextMeshProUGUI tmpro =  Instantiate(_tmproPrefab,transform);
-            tmpro.text = entries[i].Username+": "+entries[i].Score.ToString();
+            tmpro.text = i.ToString()+": "+ entries[i].Username+": "+entries[i].Score.ToString();
         }
     }
 }

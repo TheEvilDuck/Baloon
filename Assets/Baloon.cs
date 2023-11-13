@@ -40,13 +40,6 @@ public class Baloon : MonoBehaviour
         _grow = false;
     }
 
-    private void Awake() 
-    {
-        _startSize = _baloonBody.localScale;
-        _transform = transform;
-        UpdateBaloonVisuals();
-    }
-
     private void UpdateBaloonVisuals()
     {
         _baloonBody.localScale = _startSize*_currentGrow;
@@ -88,6 +81,8 @@ public class Baloon : MonoBehaviour
         _game = game;
         _game.playerBreathStarted+=OnBreathStarted;
         _game.playerBreathEnded+=OnBreathEnded;
+        _startSize = _baloonBody.localScale;
+        _transform = transform;
         UpdateBaloonVisuals();
 
     }
