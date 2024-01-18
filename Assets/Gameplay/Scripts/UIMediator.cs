@@ -1,18 +1,19 @@
 using System;
 using Gameplay;
+using PlayerInput;
 using UnityEngine;
 
 public class UIMediator : IDisposable
 {
     private UI _uI;
     private SceneLoader _sceneLoader;
-    private PlayerInput _playerInput;
+    private IPlayerInput _playerInput;
     private PlayerStats _playerStats;
     private BreathController _breathController;
     private BaloonSpawner _baloonSpawner;
     private LeaderBoardLoader _leaderBoardLoader;
 
-    public UIMediator(UI uI, SceneLoader sceneLoader, PlayerInput playerInput, PlayerStats playerStats, BreathController breathController, BaloonSpawner baloonSpawner, LeaderBoardLoader leaderBoardLoader)
+    public UIMediator(UI uI, SceneLoader sceneLoader, IPlayerInput playerInput, PlayerStats playerStats, BreathController breathController, BaloonSpawner baloonSpawner, LeaderBoardLoader leaderBoardLoader)
     {
         _uI = uI;
         _sceneLoader = sceneLoader;
@@ -29,8 +30,8 @@ public class UIMediator : IDisposable
         _uI.enoughButtonPressed+=OnEnoughButtonPressed;
         _uI.submitButtonPressed+=OnSubmitButtonPressed;
 
-        _playerInput.tapStarted+=OnInputTapStarted;
-        _playerInput.tapEnded+=OnInputTapEnded;
+        _playerInput.mainActionStarted+=OnInputTapStarted;
+        _playerInput.mainActionEnded+=OnInputTapEnded;
 
         _breathController.breathStarted+=OnBreathStarted;
 
@@ -46,8 +47,8 @@ public class UIMediator : IDisposable
         _uI.enoughButtonPressed-=OnEnoughButtonPressed;
         _uI.submitButtonPressed-=OnSubmitButtonPressed;
 
-        _playerInput.tapStarted-=OnInputTapStarted;
-        _playerInput.tapEnded-=OnInputTapEnded;
+        _playerInput.mainActionStarted-=OnInputTapStarted;
+        _playerInput.mainActionEnded-=OnInputTapEnded;
 
         _breathController.breathStarted-=OnBreathStarted;
 
@@ -70,5 +71,5 @@ public class UIMediator : IDisposable
     private void OnSubmitButtonPressed()  => _leaderBoardLoader.SetNewEntry(_uI.EnteredPlayerName, Mathf.FloorToInt(_playerStats.Points));
     private void OnPointsChanged(float points) => _uI.UpdatePointsText(Mathf.FloorToInt(points));
     private void OnBreathStarted() => _uI.HideInhaleBar();
-    private void BlockInput() => _playerInput.tapStarted-=OnInputTapStarted;
+    private void BlockInput() => _playerInput.mainActionStarted-=OnInputTapStarted;
 }

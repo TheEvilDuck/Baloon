@@ -1,3 +1,4 @@
+using PlayerInput;
 using UnityEngine;
 
 namespace Gameplay
@@ -8,7 +9,7 @@ namespace Gameplay
         [SerializeField]private SoundManager _soundManager;
         [SerializeField]private UI _uI;
 
-        private PlayerInput _playerInput;
+        private IPlayerInput _playerInput;
         private BaloonFactory _baloonFactory;
         private BaloonSpawner _baloonSpawner;
         private GameplayMediator _gameplayMediator;
@@ -22,7 +23,23 @@ namespace Gameplay
 
         private void Awake()
         {
-            _playerInput = new PlayerInput();
+            
+            switch (SystemInfo.deviceType)
+            {
+                case DeviceType.Desktop:
+                {
+                    _playerInput = new DesktopInput();
+                    break;
+                }
+                case DeviceType.Handheld:
+                {
+                    _playerInput = new MobileInput();
+                    break;
+                }
+                default:
+                    throw new System.Exception("Unkown device type!");
+            }
+
             _breathController = new BreathController(this, _baloonConfig.HoldTimeToStartBreath);
             _sceneLoader = new SceneLoader();
             _leaderBoardLoader = new LeaderBoardLoader();

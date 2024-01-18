@@ -1,21 +1,22 @@
 using System;
+using PlayerInput;
 
 public class SoundMediator: IDisposable
 {
     private SoundManager _soundManager;
     private BreathController _breathController;
-    private PlayerInput _playerInput;
+    private IPlayerInput _playerInput;
     private BaloonSpawner _baloonSpawner;
 
-    public SoundMediator(SoundManager soundManager, BreathController breathController, PlayerInput playerInput, BaloonSpawner baloonSpawner)
+    public SoundMediator(SoundManager soundManager, BreathController breathController, IPlayerInput playerInput, BaloonSpawner baloonSpawner)
     {
         _soundManager = soundManager;
         _breathController = breathController;
         _playerInput = playerInput;
         _baloonSpawner = baloonSpawner;
 
-        _playerInput.tapStarted+=OnInputTapStart;
-        _playerInput.tapEnded+=OnInputTapEnded;
+        _playerInput.mainActionStarted+=OnInputTapStart;
+        _playerInput.mainActionEnded+=OnInputTapEnded;
 
         _breathController.breathStarted+=OnBreathStarted;
 
@@ -24,8 +25,8 @@ public class SoundMediator: IDisposable
 
     public void Dispose()
     {
-        _playerInput.tapStarted-=OnInputTapStart;
-        _playerInput.tapEnded-=OnInputTapEnded;
+        _playerInput.mainActionStarted-=OnInputTapStart;
+        _playerInput.mainActionEnded-=OnInputTapEnded;
 
         _breathController.breathStarted-=OnBreathStarted;
 
@@ -39,8 +40,8 @@ public class SoundMediator: IDisposable
     private void OnBaloonExploded()
     {
         _soundManager.PlayExplosionSound();
-        _playerInput.tapStarted-=OnInputTapStart;
-        _playerInput.tapEnded-=OnInputTapEnded;
+        _playerInput.mainActionStarted-=OnInputTapStart;
+        _playerInput.mainActionEnded-=OnInputTapEnded;
     }
     private void OnInputTapStart() => _soundManager.PlayInhaleSound();
     private void OnBaloonSpawned() => _baloonSpawner.CurrentBaloon.exploded+=OnBaloonExploded;

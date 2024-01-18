@@ -1,13 +1,14 @@
 using System;
+using PlayerInput;
 
 public class GameplayMediator: IDisposable
 {
     private BaloonSpawner _baloonSpawner;
     private PlayerStatsCalculator _playerStatsCalculator;
-    private PlayerInput _playerInput;
+    private IPlayerInput _playerInput;
     private BreathController _breathController;
 
-    public GameplayMediator(BaloonSpawner baloonSpawner, PlayerStatsCalculator playerStatsCalculator, PlayerInput playerInput, BreathController breathController)
+    public GameplayMediator(BaloonSpawner baloonSpawner, PlayerStatsCalculator playerStatsCalculator, IPlayerInput playerInput, BreathController breathController)
     {
         _baloonSpawner = baloonSpawner;
         _playerStatsCalculator = playerStatsCalculator;
@@ -16,8 +17,8 @@ public class GameplayMediator: IDisposable
 
         _baloonSpawner.baloonSpawned+=OnBaloonSpawned;
 
-        _playerInput.tapStarted+=OnInputTapStarted;
-        _playerInput.tapEnded+=OnInputTapEnded;
+        _playerInput.mainActionStarted+=OnInputTapStarted;
+        _playerInput.mainActionEnded+=OnInputTapEnded;
         
         _breathController.breathStarted+=OnBreathStarted;
         _breathController.breathEnded+=OnBreathEnded;
@@ -27,8 +28,8 @@ public class GameplayMediator: IDisposable
     {
         _baloonSpawner.baloonSpawned-=OnBaloonSpawned;
 
-        _playerInput.tapStarted-=OnInputTapStarted;
-        _playerInput.tapEnded-=OnInputTapEnded;
+        _playerInput.mainActionStarted-=OnInputTapStarted;
+        _playerInput.mainActionEnded-=OnInputTapEnded;
 
         if (_baloonSpawner.CurrentBaloon!=null)
         {
@@ -58,5 +59,5 @@ public class GameplayMediator: IDisposable
     private void OnInputTapStarted() => _breathController.StartBreath();
     private void OnBreathStarted() => _baloonSpawner.CurrentBaloon.StartGrow();
     private void OnBreathEnded() => _baloonSpawner.CurrentBaloon.StopGrow();
-    private void BlockInput() => _playerInput.tapStarted-=OnInputTapStarted;
+    private void BlockInput() => _playerInput.mainActionStarted-=OnInputTapStarted;
 }
