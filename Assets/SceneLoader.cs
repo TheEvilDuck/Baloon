@@ -1,16 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SceneLoader : SingleTone<SceneLoader>
+public class SceneLoader
 {
-    public void LoadScene(int id)
+    public void ReloderCurrentScene()
     {
-        SceneManager.LoadScene(id);
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        LoadScene((SceneId)currentSceneIndex);
     }
-    public void ReloadScene()
+
+    public void LoadMainMenu() => LoadScene(SceneId.MainMenu);
+    public void LoadGameplay() => LoadScene(SceneId.Gameplay);
+
+    private void LoadScene(SceneId sceneId)
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene((int)sceneId);
     }
 }
