@@ -8,8 +8,14 @@ namespace PlayerInput
         public event Action mainActionStarted;
         public event Action mainActionEnded;
         public event Action mainAction;
+
+        private bool _blocked = false;
+
         public void Update()
         {
+            if (_blocked)
+                return;
+
             if (Input.GetMouseButtonDown(0))
                 mainActionStarted?.Invoke();
 
@@ -19,5 +25,9 @@ namespace PlayerInput
             if (Input.GetMouseButton(0))
                 mainAction?.Invoke();
         }
+
+        public void Block() => _blocked = true;
+
+        public void Enable() => _blocked = false;
     }
 }

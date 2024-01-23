@@ -8,5 +8,7 @@ namespace PlayerInput
         public event Action mainActionEnded;
         public event Action mainAction;
         public void Update();
+        public void Block();
+        public void Enable();
     }
 }

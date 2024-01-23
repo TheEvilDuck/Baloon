@@ -54,10 +54,18 @@ public class GameplayMediator: IDisposable
         BlockInput();
     }
 
-    private void OnBaloonGrown() => _playerStatsCalculator.AddPoints();
-    private void OnInputTapEnded() => _breathController.StopBreath();
+    private void OnBaloonGrown()
+    {
+        _playerStatsCalculator.AddPoints();
+        _playerStatsCalculator.IncreaseMultiplier();
+    }
+    private void OnInputTapEnded()
+    {
+        _breathController.StopBreath();
+        _playerStatsCalculator.ClearMultiplier();
+    }
     private void OnInputTapStarted() => _breathController.StartBreath();
     private void OnBreathStarted() => _baloonSpawner.CurrentBaloon.StartGrow();
     private void OnBreathEnded() => _baloonSpawner.CurrentBaloon.StopGrow();
-    private void BlockInput() => _playerInput.mainActionStarted-=OnInputTapStarted;
+    private void BlockInput() => _playerInput.Block();
 }

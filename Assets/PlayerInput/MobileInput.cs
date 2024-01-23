@@ -12,9 +12,13 @@ namespace PlayerInput
         public event Action mainAction;
 
         private bool _touch = false;
+        private bool _blocked = false;
 
         public void Update()
         {
+            if (_blocked)
+                return;
+
             if (Input.touchCount>0)
             {
                 mainAction?.Invoke();
@@ -32,5 +36,9 @@ namespace PlayerInput
                 mainActionEnded?.Invoke();
             }
         }
+
+        public void Block() => _blocked = true;
+
+        public void Enable() => _blocked = false;
     }
 }

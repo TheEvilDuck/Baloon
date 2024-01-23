@@ -65,6 +65,12 @@ namespace Dan.Main
                     return;
                 }
                 var response = JsonConvert.DeserializeObject<List<Entry>>(request.downloadHandler.text);
+
+                if (response==null)
+                {
+                    LeaderboardCreator.Log("Data is empty!");
+                    return;
+                }
                 callback?.Invoke(response.ToArray());
                 LeaderboardCreator.Log("Successfully retrieved leaderboard data!");
             }));

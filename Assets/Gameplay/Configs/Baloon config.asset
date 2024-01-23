@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23a7b863800b89a429884c97b0a2a487, type: 3}
   m_Name: Baloon config
   m_EditorClassIdentifier: 
-  <MaxBaloonSizePercent>k__BackingField: 8.5
+  <MaxBaloonSizePercent>k__BackingField: 11.6
   <SizeMultiplierRange>k__BackingField: 0.2
-  <GrowStep>k__BackingField: 0.582
-  <PointsPerStep>k__BackingField: 0.21
-  <HoldMultiplier>k__BackingField: 1.33
-  <HoldTimeToStartBreath>k__BackingField: 1.04
+  <GrowStep>k__BackingField: 0.056
+  <PointsPerStep>k__BackingField: 0.64
+  <HoldMultiplier>k__BackingField: 0.2
+  <HoldTimeToStartBreath>k__BackingField: 1.25
   <GripOffset>k__BackingField: 0.08
   <BaloonPrefab>k__BackingField: {fileID: 2769712194170344485, guid: b76dca2fb923062469c8d365a035a3ec, type: 3}

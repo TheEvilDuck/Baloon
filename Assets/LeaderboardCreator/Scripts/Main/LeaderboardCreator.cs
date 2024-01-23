@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Threading.Tasks;
 using Dan.Enums;
 using Dan.Models;
 using UnityEngine;
@@ -14,6 +15,12 @@ namespace Dan.Main
         private static LeaderboardCreatorBehaviour _behaviour;
 
         internal static string UserGuid;
+
+        public async static Task WaitForInitialization()
+        {
+            while (_behaviour==null)
+                await Task.Delay(100);
+        }
 
         [RuntimeInitializeOnLoadMethod]
         private static void Initialize()
