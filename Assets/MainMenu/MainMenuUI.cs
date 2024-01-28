@@ -6,13 +6,16 @@ using UnityEngine.UI;
 
 public class MainMenuUI : MonoBehaviour
 {
-    [SerializeField]Button _startGameButton;
-    [SerializeField]Button _exitGameButton;
-    [SerializeField]TextMeshProUGUI _entryTextPrefab;
-    [SerializeField]Transform _entriesParent;
+    [SerializeField] private Button _startGameButton;
+    [SerializeField] private Button _exitGameButton;
+    [SerializeField] private TextMeshProUGUI _entryTextPrefab;
+    [SerializeField] private Transform _entriesParent;
+    [SerializeField] private GameObject _loadingScreen;
+    [SerializeField] private Button _cancelLoadingButton;
 
     public event Action startButtonPressed;
     public event Action exitButtonPressed;
+    public event Action cancelLoadingButtonPressed;
 
     public void LoadLeaderboardText(IEnumerable<PlayerData> entries)
     {
@@ -26,15 +29,19 @@ public class MainMenuUI : MonoBehaviour
             entryText.text = $"{playerData.Name}: {playerData.Score}";
         }
     }
+    public void HideLoadingScreen() => _loadingScreen.SetActive(false);
     private void OnEnable() {
         _startGameButton.onClick.AddListener(OnStartPressed);
         _exitGameButton.onClick.AddListener(OnExitPressed);
+        _cancelLoadingButton.onClick.AddListener(OnCancelLoadingPressed);
     }
     private void OnDisable() {
         _startGameButton.onClick.RemoveListener(OnStartPressed);
         _exitGameButton.onClick.RemoveListener(OnExitPressed);
+        _cancelLoadingButton.onClick.RemoveListener(OnCancelLoadingPressed);
     }
 
     private void OnStartPressed() => startButtonPressed?.Invoke();
     private void OnExitPressed() => exitButtonPressed?.Invoke();
+    private void OnCancelLoadingPressed() => cancelLoadingButtonPressed?.Invoke();
 }

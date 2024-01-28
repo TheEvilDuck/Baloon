@@ -64,7 +64,7 @@ namespace Gameplay
 
             _gameplayMediator = new GameplayMediator(_baloonSpawner,_playerStatsCalculator,_playerInput,_breathController);
             _uIMediator = new UIMediator(_uI,_sceneLoader,_playerInput,_playerStats,_breathController, _baloonSpawner,_leaderBoardLoader);
-            _soundMediator = new SoundMediator(_soundManager,_breathController,_playerInput,_baloonSpawner);
+            _soundMediator = new SoundMediator(_soundManager,_breathController,_playerInput,_baloonSpawner, _uI);
 
             _uI.Init(_baloonConfig.HoldTimeToStartBreath);
         }

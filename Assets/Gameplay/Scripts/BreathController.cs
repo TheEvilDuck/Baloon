@@ -33,11 +33,8 @@ public class BreathController
     private IEnumerator Breath()
     {
         inhaleStarted?.Invoke();
-        Debug.Log("INHALE");
 
         yield return new WaitForSeconds(_inhaleTime);
-
-        Debug.Log("BREATH");
 
         breathStarted?.Invoke();
     }

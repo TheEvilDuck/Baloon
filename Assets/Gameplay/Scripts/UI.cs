@@ -8,6 +8,8 @@ namespace Gameplay
 {
     public class UI : MonoBehaviour
     {
+        private const string CONFIRM_POPUP_TEXT = "Are you sure you want to update your name?";
+
         [SerializeField] private TextMeshProUGUI _pointsText;
         [SerializeField] private GameObject _breathUI;
         [SerializeField] private Slider _breathBarSlider;
@@ -19,6 +21,7 @@ namespace Gameplay
         [SerializeField] private TextMeshProUGUI _pointsInResultMenu;
         [SerializeField] private TMP_InputField _submitName;
         [SerializeField] private TextMeshProUGUI _submitResultText;
+        [SerializeField] private ConfirmPopup _confirmPopup;
 
         public event Action reloadButtonPressed;
         public event Action enoughButtonPressed;
@@ -31,6 +34,7 @@ namespace Gameplay
 
         private bool _inhale = false;
         private float _inhaleTime;
+        private string _nameBuffer;
 
         public string EnteredPlayerName => _submitName.text;
 
@@ -42,12 +46,18 @@ namespace Gameplay
             _reloadSceneButton.onClick.AddListener(OnReloadButtonPressed);
             _doneButton.onClick.AddListener(OnEnoughButtonPressed);
 
+            _confirmPopup.confirmed+=OnConfirmChangeNamePressed;
+            _confirmPopup.canceled+=OnCancelChangeNamePressed;
+
         }
         private void OnDisable() {
             _sumbitButton.onClick.RemoveListener(OnSubmitButtonPressed);
             _exitButton.onClick.RemoveListener(OnExitButtonPressed);
             _reloadSceneButton.onClick.RemoveListener(OnReloadButtonPressed);
             _doneButton.onClick.RemoveListener(OnEnoughButtonPressed);
+
+            _confirmPopup.confirmed-=OnConfirmChangeNamePressed;
+            _confirmPopup.canceled-=OnCancelChangeNamePressed;
         }
 
         private void Update() 
@@ -69,6 +79,11 @@ namespace Gameplay
             _pointsInResultMenu.text = $"Your finale score: {points}";
         }
         public void UpdateInhaleBar(float holdTimePercent) => _breathBarSlider.value = holdTimePercent;
+        public void UpdateName(string name)
+        {
+            _submitName.text = name;
+            _nameBuffer = name;
+        }
         public void ShowInhaleBar()
         {
             _breathUI.SetActive(true);
@@ -88,6 +103,12 @@ namespace Gameplay
         }
 
         public void OnReloadButtonPressed() => reloadButtonPressed?.Invoke();
+        public void HideSubmit()
+        {
+            _submitName.gameObject.SetActive(false);
+            _sumbitButton.gameObject.SetActive(false);
+            _pointsInResultMenu.text = "You lost";
+        }
 
         private void HidePointsText() =>  _pointsText.gameObject.SetActive(false);
 
@@ -115,6 +136,16 @@ namespace Gameplay
                 return;
             }
 
+            if (_nameBuffer!=string.Empty)
+            {
+                
+                if (string.Compare(_nameBuffer,_submitName.text)!=0)
+                {
+                    _confirmPopup.Show(CONFIRM_POPUP_TEXT);
+                    return;
+                }
+            }
+
             bool? success = await submitButtonPressed?.Invoke();
 
             if (success==null)
@@ -138,6 +169,18 @@ namespace Gameplay
         {
             ShowResultMenu();
             enoughButtonPressed?.Invoke();
+        }
+
+        private void OnConfirmChangeNamePressed()
+        {
+            _nameBuffer = _submitName.text;
+            OnSubmitButtonPressed();
+        }
+
+        private void OnCancelChangeNamePressed()
+        {
+            _submitName.text = _nameBuffer;
+            _submitResultText.gameObject.SetActive(false);
         }
         private bool DoesNameHasBanWords(string name)
         {

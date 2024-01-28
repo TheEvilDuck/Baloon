@@ -62,6 +62,8 @@ public class UIMediator : IDisposable
     private void OnBaloonExploded()
     {
         _uI.ShowResultMenu();
+        _uI.HideSubmit();
+        _uI.HideInhaleBar();
         BlockInput();
     }
 
@@ -69,7 +71,15 @@ public class UIMediator : IDisposable
     private void OnInputTapEnded() => _uI.HideInhaleBar();
     private void OnExitButtonPressed() => _sceneLoader.LoadMainMenu();
     private void OnReloadButtonPressed() => _sceneLoader.ReloderCurrentScene();
-    private void OnEnoughButtonPressed() => BlockInput();
+    private void OnEnoughButtonPressed()
+    {
+        _uI.UpdateName(_leaderBoardLoader.CurrentPlayerName);
+        BlockInput();
+        _uI.HideInhaleBar();
+
+        if (_playerStats.Points==0)
+            _uI.HideSubmit();
+    }
     private async Task<bool> OnSubmitButtonPressed()
     {
         bool success =await _leaderBoardLoader.SendNewScore(Mathf.FloorToInt(_playerStats.Points));

@@ -15,7 +15,13 @@ namespace MainMenu
 
         private async void Awake() 
         {
-            _container.Init();
+            PeristantContainer container = FindObjectOfType<PeristantContainer>();
+
+            if (container==null)
+                container = _container;
+
+            if (!_container.Initilizied)
+                _container.Init();
             
             _sceneLoader = new SceneLoader();
             _leaderBoardLoader = new LeaderBoardLoader();

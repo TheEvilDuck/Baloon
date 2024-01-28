@@ -1,4 +1,5 @@
 using System;
+using Gameplay;
 using PlayerInput;
 
 public class SoundMediator: IDisposable
@@ -7,13 +8,15 @@ public class SoundMediator: IDisposable
     private BreathController _breathController;
     private IPlayerInput _playerInput;
     private BaloonSpawner _baloonSpawner;
+    private UI _uI;
 
-    public SoundMediator(SoundManager soundManager, BreathController breathController, IPlayerInput playerInput, BaloonSpawner baloonSpawner)
+    public SoundMediator(SoundManager soundManager, BreathController breathController, IPlayerInput playerInput, BaloonSpawner baloonSpawner, UI uI)
     {
         _soundManager = soundManager;
         _breathController = breathController;
         _playerInput = playerInput;
         _baloonSpawner = baloonSpawner;
+        _uI = uI;
 
         _playerInput.mainActionStarted+=OnInputTapStart;
         _playerInput.mainActionEnded+=OnInputTapEnded;
@@ -21,6 +24,8 @@ public class SoundMediator: IDisposable
         _breathController.breathStarted+=OnBreathStarted;
 
         _baloonSpawner.baloonSpawned+=OnBaloonSpawned;
+
+        _uI.enoughButtonPressed+=OnEnoughButtonPressed;
     }
 
     public void Dispose()
@@ -34,6 +39,8 @@ public class SoundMediator: IDisposable
 
         if (_baloonSpawner.CurrentBaloon!=null)
              _baloonSpawner.CurrentBaloon.exploded-=OnBaloonExploded;
+
+        _uI.enoughButtonPressed-=OnEnoughButtonPressed;
     }
 
     private void OnBreathStarted() => _soundManager.PlayBreathSound();
@@ -46,6 +53,7 @@ public class SoundMediator: IDisposable
     private void OnInputTapStart() => _soundManager.PlayInhaleSound();
     private void OnBaloonSpawned() => _baloonSpawner.CurrentBaloon.exploded+=OnBaloonExploded;
     private void OnInputTapEnded() => _soundManager.StopCurrentSound();
+    private void OnEnoughButtonPressed() => _soundManager.StopCurrentSound();
 
     
 }

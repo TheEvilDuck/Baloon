@@ -16,17 +16,22 @@ public class MainMenuMediator: IDisposable
 
         _mainMenuUI.startButtonPressed+=OnStartButtonPressed;
         _mainMenuUI.exitButtonPressed+=OnExitButtonPressed;
+        _mainMenuUI.cancelLoadingButtonPressed+=OnCancelLoadingPressed;
 
         _mainMenuUI.LoadLeaderboardText(_leaderBoardLoader.Get());
+
+        _mainMenuUI.HideLoadingScreen();
     }
 
     public void Dispose()
     {
         _mainMenuUI.startButtonPressed-=OnStartButtonPressed;
         _mainMenuUI.exitButtonPressed-=OnExitButtonPressed;
+        _mainMenuUI.cancelLoadingButtonPressed-=OnCancelLoadingPressed;
     }
 
     private void OnStartButtonPressed() => _sceneLoader.LoadGameplay();
 
     private void OnExitButtonPressed() => Application.Quit();
+    private void OnCancelLoadingPressed() => _leaderBoardLoader.CancelLoading();
 }

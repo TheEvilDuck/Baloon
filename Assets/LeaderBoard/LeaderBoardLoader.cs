@@ -11,23 +11,28 @@ namespace LeaderBoard
     {
         private const int LEADERBOARD_SIZE = 10;
         private const string LEADERBOARD_KEY = "baloonKey";
+        private const int INIT_WAIT_MAX_TIME = 10;
         private PlayerData[] _currentLeaderboard;
+        private string _sessionId;
         private string _playerId;
+        private string _currentPlayerName;
         private bool _scoreSubmitted = false;
         private bool _response = false;
         private bool _loaded = false;
+        private bool _canceled = false;
+
+        public string CurrentPlayerName => _currentPlayerName;
 
         public LeaderBoardLoader()
         {
             LootLockerSDKManager.StartGuestSession(OnSessionStarted);
-            
         }
 
         public async Task<bool> SendNewScore(int score)
         {
             _scoreSubmitted = false;
             _response = false;
-            LootLockerSDKManager.SubmitScore(_playerId,score,LEADERBOARD_KEY,OnScoreSubmit);
+            LootLockerSDKManager.SubmitScore(_sessionId,score,LEADERBOARD_KEY,OnScoreSubmit);
 
             while (!_response)
                 await Task.Delay(100);
@@ -39,18 +44,37 @@ namespace LeaderBoard
 
         public async Task Load()
         {
-            while (!LootLockerSDKManager.CheckInitialized())    
-                await Task.Delay(100);
-            
+            _canceled = false;
+
+            for (int i = 0; i< INIT_WAIT_MAX_TIME;i++)
+            {
+                if (!LootLockerSDKManager.CheckInitialized()&&!_canceled)
+                    await Task.Delay(100);
+                else
+                    break;
+            }
+
+            if (!LootLockerSDKManager.CheckInitialized()||_canceled)
+                return;
+
             LootLockerSDKManager.GetScoreList(LEADERBOARD_KEY,LEADERBOARD_SIZE,OnLeaderBorardLoadComplete);
 
             while (!_loaded)
                 await Task.Delay(100);
+
+            LootLockerSDKManager.GetMemberRank(LEADERBOARD_KEY,_playerId, (response)=>{
+                if (response.success)
+                {
+                    _currentPlayerName = response.player.name;
+                }
+            });
         }
         public void ChangePlayerName(string name)
         {
             LootLockerSDKManager.SetPlayerName(name,OnPlayerNameChanged);
         }
+
+        public void CancelLoading() => _canceled = true;
 
         private void OnLeaderBorardLoadComplete(LootLockerGetScoreListResponse response)
         {
@@ -63,10 +87,11 @@ namespace LeaderBoard
                 Debug.Log("LeaderBoard loaded successfully!");
 
                 List<PlayerData>loadedLeaderBoard = new List<PlayerData>();
-                foreach (var item in response.items)
+                foreach (LootLockerLeaderboardMember item in response.items)
                 {
                     PlayerData playerData = new PlayerData(item.player.name,item.score);
                     loadedLeaderBoard.Add(playerData);
+
                 }
 
                 _currentLeaderboard = loadedLeaderBoard.ToArray();
@@ -85,7 +110,8 @@ namespace LeaderBoard
             {
                 Debug.Log($"Lootlocker session started! Player id: {response.player_identifier}");
 
-                _playerId = response.player_identifier;
+                _sessionId = response.player_identifier;
+                _playerId = response.player_id.ToString();
             }
 
             
