@@ -30,6 +30,11 @@ public class MainMenuUI : MonoBehaviour
         }
     }
     public void HideLoadingScreen() => _loadingScreen.SetActive(false);
+    public void SpawnMessage(string message)
+    {
+        TextMeshProUGUI messageObject = Instantiate(_entryTextPrefab,_entriesParent);
+        messageObject.text = message;
+    }
     private void OnEnable() {
         _startGameButton.onClick.AddListener(OnStartPressed);
         _exitGameButton.onClick.AddListener(OnExitPressed);

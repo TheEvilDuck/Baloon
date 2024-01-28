@@ -17,6 +17,7 @@ public class MainMenuMediator: IDisposable
         _mainMenuUI.startButtonPressed+=OnStartButtonPressed;
         _mainMenuUI.exitButtonPressed+=OnExitButtonPressed;
         _mainMenuUI.cancelLoadingButtonPressed+=OnCancelLoadingPressed;
+        _leaderBoardLoader.leaderboardLoadFailed+=OnLeaderboardLoadFailed;
 
         _mainMenuUI.LoadLeaderboardText(_leaderBoardLoader.Get());
 
@@ -28,10 +29,12 @@ public class MainMenuMediator: IDisposable
         _mainMenuUI.startButtonPressed-=OnStartButtonPressed;
         _mainMenuUI.exitButtonPressed-=OnExitButtonPressed;
         _mainMenuUI.cancelLoadingButtonPressed-=OnCancelLoadingPressed;
+        _leaderBoardLoader.leaderboardLoadFailed-=OnLeaderboardLoadFailed;
     }
 
     private void OnStartButtonPressed() => _sceneLoader.LoadGameplay();
 
     private void OnExitButtonPressed() => Application.Quit();
     private void OnCancelLoadingPressed() => _leaderBoardLoader.CancelLoading();
+    private void OnLeaderboardLoadFailed() => _mainMenuUI.SpawnMessage("Can't load leaderboard :(");
 }

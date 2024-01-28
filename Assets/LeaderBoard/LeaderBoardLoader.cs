@@ -11,7 +11,7 @@ namespace LeaderBoard
     {
         private const int LEADERBOARD_SIZE = 10;
         private const string LEADERBOARD_KEY = "baloonKey";
-        private const int INIT_WAIT_MAX_TIME = 10;
+        private const int INIT_WAIT_MAX_TIME = 60;
         private PlayerData[] _currentLeaderboard;
         private string _sessionId;
         private string _playerId;
@@ -20,6 +20,8 @@ namespace LeaderBoard
         private bool _response = false;
         private bool _loaded = false;
         private bool _canceled = false;
+
+        public event Action leaderboardLoadFailed;
 
         public string CurrentPlayerName => _currentPlayerName;
 
@@ -55,7 +57,10 @@ namespace LeaderBoard
             }
 
             if (!LootLockerSDKManager.CheckInitialized()||_canceled)
+            {
+                leaderboardLoadFailed?.Invoke();
                 return;
+            }
 
             LootLockerSDKManager.GetScoreList(LEADERBOARD_KEY,LEADERBOARD_SIZE,OnLeaderBorardLoadComplete);
 
