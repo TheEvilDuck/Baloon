@@ -1,5 +1,5 @@
 using System;
-using Dan.Models;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,16 +14,16 @@ public class MainMenuUI : MonoBehaviour
     public event Action startButtonPressed;
     public event Action exitButtonPressed;
 
-    public void LoadLeaderboardText(Entry[] entries)
+    public void LoadLeaderboardText(IEnumerable<PlayerData> entries)
     {
 
         if (entries==null)
             return;
 
-        foreach (Entry entry in entries)
+        foreach (PlayerData playerData in entries)
         {
             TextMeshProUGUI entryText = Instantiate(_entryTextPrefab,_entriesParent);
-            entryText.text = $"{entry.Username}: {entry.Score}";
+            entryText.text = $"{playerData.Name}: {playerData.Score}";
         }
     }
     private void OnEnable() {

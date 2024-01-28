@@ -1,5 +1,7 @@
 using PlayerInput;
 using UnityEngine;
+using LeaderBoard;
+using Containers;
 
 namespace Gameplay
 {
@@ -20,6 +22,7 @@ namespace Gameplay
         private BreathController _breathController;
         private SceneLoader _sceneLoader;
         private LeaderBoardLoader _leaderBoardLoader;
+        private PeristantContainer _container;
 
         private void Awake()
         {
@@ -40,9 +43,18 @@ namespace Gameplay
                     throw new System.Exception("Unkown device type!");
             }
 
+            _container = FindObjectOfType<PeristantContainer>();
+
+            if (_container==null)
+                throw new System.Exception("Can't find persistant container!");
+
             _breathController = new BreathController(this, _baloonConfig.HoldTimeToStartBreath);
             _sceneLoader = new SceneLoader();
-            _leaderBoardLoader = new LeaderBoardLoader();
+            
+            if (!_container.TryGet<LeaderBoardLoader>(out object obj))
+                throw new System.Exception("There is no registered leaderboardloader in container!");
+
+            _leaderBoardLoader = (LeaderBoardLoader)obj;
 
             _baloonFactory = new BaloonFactory(_baloonConfig);
             _baloonSpawner = new BaloonSpawner(_baloonFactory);

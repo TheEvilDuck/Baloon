@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using LeaderBoard;
 
 public class MainMenuMediator: IDisposable
 {

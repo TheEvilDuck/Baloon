@@ -2,6 +2,8 @@ using System;
 using Gameplay;
 using PlayerInput;
 using UnityEngine;
+using LeaderBoard;
+using System.Threading.Tasks;
 
 public class UIMediator : IDisposable
 {
@@ -68,8 +70,24 @@ public class UIMediator : IDisposable
     private void OnExitButtonPressed() => _sceneLoader.LoadMainMenu();
     private void OnReloadButtonPressed() => _sceneLoader.ReloderCurrentScene();
     private void OnEnoughButtonPressed() => BlockInput();
-    private void OnSubmitButtonPressed()  => _leaderBoardLoader.SetNewEntry(_uI.EnteredPlayerName, Mathf.FloorToInt(_playerStats.Points));
+    private async Task<bool> OnSubmitButtonPressed()
+    {
+        bool success =await _leaderBoardLoader.SendNewScore(Mathf.FloorToInt(_playerStats.Points));
+
+        if (success)
+        {
+            _leaderBoardLoader.ChangePlayerName(_uI.EnteredPlayerName);
+            return true;
+        }
+
+        return false;
+    }
     private void OnPointsChanged(float points) => _uI.UpdatePointsText(Mathf.FloorToInt(points));
     private void OnBreathStarted() => _uI.HideInhaleBar();
-    private void BlockInput() => _playerInput.mainActionStarted-=OnInputTapStarted;
+    private void BlockInput()
+    {
+        _playerInput.Block();
+        _breathController.StopBreath();
+    } 
+
 }

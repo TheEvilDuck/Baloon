@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using System.Threading.Tasks;
 
 namespace Gameplay
 {
@@ -21,7 +22,7 @@ namespace Gameplay
 
         public event Action reloadButtonPressed;
         public event Action enoughButtonPressed;
-        public event Action submitButtonPressed;
+        public event Func<Task<bool>> submitButtonPressed;
         public event Action exitButtonPressed;
 
         private readonly string[] _banWords = {
@@ -91,10 +92,11 @@ namespace Gameplay
         private void HidePointsText() =>  _pointsText.gameObject.SetActive(false);
 
         private void OnExitButtonPressed() => exitButtonPressed?.Invoke();
-        private void OnSubmitButtonPressed()
+        private async void OnSubmitButtonPressed()
         {
             _submitResultText.gameObject.SetActive(true);
             _submitResultText.color = Color.red;
+            _submitResultText.text = "Waiting for response...";
 
             if (_submitName.text==string.Empty)
             {
@@ -112,10 +114,24 @@ namespace Gameplay
                 _submitResultText.text = "The name is too short!";
                 return;
             }
+
+            bool? success = await submitButtonPressed?.Invoke();
+
+            if (success==null)
+            {
+                _submitResultText.text = "Something went wrong...";
+                return;
+            }
+
+            if ((bool)success==false)
+            {
+                _submitResultText.text = "Error while sending info";
+                return;
+            }
+
             _submitResultText.text = "Success!";
             _submitResultText.color = Color.green;
 
-            submitButtonPressed?.Invoke();
         }
 
         private void OnEnoughButtonPressed()
