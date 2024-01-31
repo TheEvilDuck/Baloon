@@ -13,7 +13,7 @@ namespace MainMenu
         private MainMenuMediator _mainMenuMediator;
         private LeaderBoardLoader _leaderBoardLoader;
 
-        private async void Awake() 
+        private void Awake() 
         {
             PeristantContainer container = FindObjectOfType<PeristantContainer>();
 
@@ -37,9 +37,10 @@ namespace MainMenu
             }
             
             _sceneLoader = new SceneLoader();
-            await _leaderBoardLoader.Load();
 
             _mainMenuMediator = new MainMenuMediator(_sceneLoader,_mainMenuUI,_leaderBoardLoader);
+
+            _leaderBoardLoader.Load();
         }
 
         private void OnDestroy() 

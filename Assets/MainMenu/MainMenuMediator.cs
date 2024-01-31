@@ -16,25 +16,21 @@ public class MainMenuMediator: IDisposable
 
         _mainMenuUI.startButtonPressed+=OnStartButtonPressed;
         _mainMenuUI.exitButtonPressed+=OnExitButtonPressed;
-        _mainMenuUI.cancelLoadingButtonPressed+=OnCancelLoadingPressed;
-        _leaderBoardLoader.leaderboardLoadFailed+=OnLeaderboardLoadFailed;
-
-        _mainMenuUI.LoadLeaderboardText(_leaderBoardLoader.Get());
-
-        _mainMenuUI.HideLoadingScreen();
+        _leaderBoardLoader.gotErrorInResponse+=OnLeaderboardLoadFailed;
+        _leaderBoardLoader.leaderBoardLoaded+=OnLeaderBoardLoaded;
     }
 
     public void Dispose()
     {
         _mainMenuUI.startButtonPressed-=OnStartButtonPressed;
         _mainMenuUI.exitButtonPressed-=OnExitButtonPressed;
-        _mainMenuUI.cancelLoadingButtonPressed-=OnCancelLoadingPressed;
-        _leaderBoardLoader.leaderboardLoadFailed-=OnLeaderboardLoadFailed;
+        _leaderBoardLoader.gotErrorInResponse-=OnLeaderboardLoadFailed;
+        _leaderBoardLoader.leaderBoardLoaded-=OnLeaderBoardLoaded;
     }
 
     private void OnStartButtonPressed() => _sceneLoader.LoadGameplay();
 
     private void OnExitButtonPressed() => Application.Quit();
-    private void OnCancelLoadingPressed() => _leaderBoardLoader.CancelLoading();
     private void OnLeaderboardLoadFailed() => _mainMenuUI.SpawnMessage("Can't load leaderboard :(");
+    private void OnLeaderBoardLoaded() => _mainMenuUI.LoadLeaderboardText(_leaderBoardLoader.CurrentLeaderBoard);
 }

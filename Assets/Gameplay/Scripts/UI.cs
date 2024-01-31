@@ -25,7 +25,7 @@ namespace Gameplay
 
         public event Action reloadButtonPressed;
         public event Action enoughButtonPressed;
-        public event Func<Task<bool>> submitButtonPressed;
+        public event Action submitButtonPressed;
         public event Action exitButtonPressed;
 
         private readonly string[] _banWords = {
@@ -100,9 +100,8 @@ namespace Gameplay
             _resultMenu.SetActive(true);
             HideInhaleBar();
             HidePointsText();
+            HideEnoughButton();
         }
-
-        public void OnReloadButtonPressed() => reloadButtonPressed?.Invoke();
         public void HideSubmit()
         {
             _submitName.gameObject.SetActive(false);
@@ -110,10 +109,24 @@ namespace Gameplay
             _pointsInResultMenu.text = "You lost";
         }
 
+        public void ShowErrorInResultMenu()
+        {
+            _submitResultText.color = Color.red;
+            _submitResultText.text = "Something went wrong...";
+        }
+
+        public void ShowSuccessInResultMenu()
+        {
+            _submitResultText.text = "Success!";
+            _submitResultText.color = Color.green;
+        }
+
         private void HidePointsText() =>  _pointsText.gameObject.SetActive(false);
+        private void HideEnoughButton() => _doneButton.gameObject.SetActive(false);
+        private void OnReloadButtonPressed() => reloadButtonPressed?.Invoke();
 
         private void OnExitButtonPressed() => exitButtonPressed?.Invoke();
-        private async void OnSubmitButtonPressed()
+        private void OnSubmitButtonPressed()
         {
             _submitResultText.gameObject.SetActive(true);
             _submitResultText.color = Color.red;
@@ -146,23 +159,7 @@ namespace Gameplay
                 }
             }
 
-            bool? success = await submitButtonPressed?.Invoke();
-
-            if (success==null)
-            {
-                _submitResultText.text = "Something went wrong...";
-                return;
-            }
-
-            if ((bool)success==false)
-            {
-                _submitResultText.text = "Error while sending info";
-                return;
-            }
-
-            _submitResultText.text = "Success!";
-            _submitResultText.color = Color.green;
-
+            submitButtonPressed?.Invoke();
         }
 
         private void OnEnoughButtonPressed()

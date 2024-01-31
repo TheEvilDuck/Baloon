@@ -38,6 +38,9 @@ public class UIMediator : IDisposable
         _breathController.breathStarted+=OnBreathStarted;
 
         _baloonSpawner.baloonSpawned+=OnBaloonSpawned;
+
+        _leaderBoardLoader.gotErrorInResponse+=OnGotErrorResponseInLeaderBoard;
+        _leaderBoardLoader.gotSuccessResponseAfterSentScore+=OnGotSuccessResponseAfterScoreSent;
     }
 
     public void Dispose()
@@ -55,6 +58,9 @@ public class UIMediator : IDisposable
         _breathController.breathStarted-=OnBreathStarted;
 
         _baloonSpawner.baloonSpawned-=OnBaloonSpawned;
+
+        _leaderBoardLoader.gotErrorInResponse-=OnGotErrorResponseInLeaderBoard;
+        _leaderBoardLoader.gotSuccessResponseAfterSentScore-=OnGotSuccessResponseAfterScoreSent;
     }
 
     private void OnBaloonSpawned() => _baloonSpawner.CurrentBaloon.exploded+=OnBaloonExploded;
@@ -80,17 +86,12 @@ public class UIMediator : IDisposable
         if (_playerStats.Points==0)
             _uI.HideSubmit();
     }
-    private async Task<bool> OnSubmitButtonPressed()
+    private void OnSubmitButtonPressed()
     {
-        bool success =await _leaderBoardLoader.SendNewScore(Mathf.FloorToInt(_playerStats.Points));
+        _leaderBoardLoader.SendNewScore(Mathf.FloorToInt(_playerStats.Points));
 
-        if (success)
-        {
-            _leaderBoardLoader.ChangePlayerName(_uI.EnteredPlayerName);
-            return true;
-        }
-
-        return false;
+        if (string.Compare(_uI.EnteredPlayerName, _leaderBoardLoader.CurrentPlayerName)!= 0)
+             _leaderBoardLoader.UpdatePlayerName(_uI.EnteredPlayerName);
     }
     private void OnPointsChanged(float points) => _uI.UpdatePointsText(Mathf.FloorToInt(points));
     private void OnBreathStarted() => _uI.HideInhaleBar();
@@ -99,5 +100,8 @@ public class UIMediator : IDisposable
         _playerInput.Block();
         _breathController.StopBreath();
     } 
+
+    private void OnGotSuccessResponseAfterScoreSent() => _uI.ShowSuccessInResultMenu();
+    private void OnGotErrorResponseInLeaderBoard() => _uI.ShowErrorInResultMenu();
 
 }
